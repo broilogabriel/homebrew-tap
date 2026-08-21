@@ -1,7 +1,11 @@
 class Spotifymenubar < Formula
   desc "Menu-bar controller for the Spotify desktop app"
   homepage "https://github.com/broilogabriel/SpotifyMenuBar"
-  url "https://github.com/broilogabriel/SpotifyMenuBar/archive/refs/tags/v1.1.0.tar.gz"
+  # Release asset, not GitHub's auto-generated /archive/refs/tags/ tarball:
+  # GitHub does not guarantee those are byte-stable, so a pinned sha256 can
+  # break without the release changing. Uploaded assets are immutable.
+  # Both lines are rewritten by the app repo's release workflow.
+  url "https://github.com/broilogabriel/SpotifyMenuBar/releases/download/v1.1.0/SpotifyMenuBar-1.1.0.tar.gz"
   sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
 

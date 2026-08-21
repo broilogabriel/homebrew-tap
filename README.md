@@ -20,8 +20,10 @@ refused on Apple Silicon, which is also why this is a formula and not a cask.
 
 ## Releasing
 
-Steps live in the app repo's `AGENTS.md` under "Homebrew distribution". In short:
-tag the app repo, hash the tag tarball, update `url` + `sha256` here.
+**Automated.** Pushing a `v*` tag in the app repo runs its `release.yml` workflow,
+which builds a source tarball, publishes it as an immutable release asset, and
+pushes the `url` + `sha256` bump here using a deploy key. Do not edit those two
+lines by hand.
 
 Known duplication: the bundle assembly in `Formula/spotifymenubar.rb` repeats four
 lines of the app repo's `build-app.sh`. Sharing it would mean teaching
