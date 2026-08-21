@@ -1,0 +1,56 @@
+# Adapted from `brew tap-new`'s scaffold. Two deliberate divergences:
+#
+#   * macOS only. The scaffold also runs a Linux container, but every formula
+#     here is macOS-only (`depends_on macos:`), so that leg has nothing to do.
+#   * `--only-formulae` runs on push to main as well as on pull requests. The
+#     scaffold gates it to PRs, which would skip exactly the commits that matter
+#     here: release workflows in the app repos push formula bumps straight to
+#     main, and a bad `sed` would otherwise reach users unchecked.
+#
+# The bottle-artifact upload step is dropped: these formulae build from source
+# and no bottles are ever published.
+name: brew test-bot
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+
+jobs:
+  test-bot:
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      checks: read
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@b35a29a0f83ee8b8ca07b219fc8db3d7bb88ab49 # 2026.08.10.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Homebrew Bundler RubyGems
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: macos-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: macos-rubygems-
+
+      - run: brew test-bot --only-cleanup-before
+
+      - run: brew test-bot --only-setup
+
+      # Style and audit every formula in the tap.
+      - run: brew test-bot --only-tap-syntax
+
+      # Actually build and install the changed formulae.
+      - run: brew test-bot --only-formulae
