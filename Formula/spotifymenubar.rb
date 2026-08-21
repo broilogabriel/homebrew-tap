@@ -6,7 +6,7 @@ class Spotifymenubar < Formula
   # break without the release changing. Uploaded assets are immutable.
   # Both lines are rewritten by the app repo's release workflow.
   url "https://github.com/broilogabriel/SpotifyMenuBar/releases/download/v1.1.0/SpotifyMenuBar-1.1.0.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256 "e236a16733ac9f7bccbbef239b448b732d72ba036382a9779fa1cf5dd7abaaf4"
   license "MIT"
 
   depends_on macos: :ventura
