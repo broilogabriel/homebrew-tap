@@ -12,22 +12,22 @@ class Spotifymenubar < Formula
   depends_on macos: :ventura
 
   def install
+    # Delegate to the app repo's build-app.sh, its only build recipe, so the SDK pin
+    # and its check apply here too (app AGENTS.md decision #22). Without the pin,
+    # the macOS 27 toolchain stamps the binary as SDK 13.0 and AppKit runs it at
+    # roughly double the CPU.
+    #
     # --disable-sandbox is mandatory: SwiftPM shells out to sandbox-exec, which
     # cannot nest inside Homebrew's own build sandbox. Without it the build fails
     # as "error: Invalid manifest", which points nowhere near the real cause.
-    system "swift", "build", "-c", "release", "--disable-sandbox"
+    #
+    # The script also ad-hoc signs the bundle -- the stable code identity
+    # SMAppService (launch-at-login) and macOS Automation consent (TCC) rely on,
+    # enough here only because a locally built bundle is never quarantined.
+    ENV["SWIFT_BUILD_FLAGS"] = "--disable-sandbox"
+    system "./build-app.sh"
 
-    app = "SpotifyMenuBar.app"
-    (buildpath/"#{app}/Contents/MacOS").mkpath
-    cp ".build/release/SpotifyMenuBar", "#{app}/Contents/MacOS/SpotifyMenuBar"
-    cp "Info.plist", "#{app}/Contents/Info.plist"
-
-    # Ad-hoc signing gives the bundle the stable code identity SMAppService
-    # (launch-at-login) and macOS Automation consent (TCC) rely on. It is enough
-    # here only because a locally built bundle is never quarantined.
-    system "codesign", "--force", "--sign", "-", app
-
-    prefix.install app
+    prefix.install "SpotifyMenuBar.app"
   end
 
   def caveats
