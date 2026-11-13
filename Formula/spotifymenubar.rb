@@ -5,8 +5,8 @@ class Spotifymenubar < Formula
   # GitHub does not guarantee those are byte-stable, so a pinned sha256 can
   # break without the release changing. Uploaded assets are immutable.
   # Both lines are rewritten by the app repo's release workflow.
-  url "https://github.com/broilogabriel/SpotifyMenuBar/releases/download/v1.3.0/SpotifyMenuBar-1.3.0.tar.gz"
-  sha256 "c7e853fbc1f6f735ce725c9f48fa0d287c1ad9598e4538b8aca7da0c2297ab4f"
+  url "https://github.com/broilogabriel/SpotifyMenuBar/releases/download/v1.3.1/SpotifyMenuBar-1.3.1.tar.gz"
+  sha256 "2db13e5881ebf8a81e1ff56224250c1993dd240983c1fd1235847bf017e4b42e"
   license "MIT"
 
   depends_on macos: :ventura
